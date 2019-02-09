@@ -1,6 +1,9 @@
 package netty.client;
 
 import io.netty.bootstrap.Bootstrap;
+import io.netty.buffer.ByteBuf;
+import io.netty.channel.Channel;
+import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
 import io.netty.channel.ChannelOption;
 import io.netty.channel.nio.NioEventLoopGroup;
@@ -8,8 +11,12 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import netty.protocol.PacketCodec;
+import netty.protocol.request.MessageRequestPacket;
+import netty.util.LoginUtil;
 
 import java.util.Date;
+import java.util.Scanner;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -70,7 +77,9 @@ public class NettyClient {
             @Override
             public void operationComplete(Future<? super Void> future) throws Exception {
                 if (future.isSuccess()) {
-                    System.out.println("连接成功!");
+                    System.out.println("连接成功，启动控制台线程!");
+                    Channel channel = ((ChannelFuture) future).channel();
+                    startConsoleThread(channel);
                 } else if (retry == 0) {
                     System.err.println("重试次数已用完，放弃连接!");
                 } else {
@@ -86,5 +95,27 @@ public class NettyClient {
                 }
             }
         });
+    }
+
+    /**
+     * 启动控制台线程，监听客户端控制台输入消息
+     *
+     * @param channel 客户端Channel
+     */
+    private static void startConsoleThread(Channel channel) {
+        new Thread(() -> {
+            while (!Thread.interrupted()) {
+                if (LoginUtil.hasLogin(channel)) {
+                    System.out.println("请输入消息以发送至服务端: ");
+                    Scanner sc = new Scanner(System.in);
+                    String message = sc.nextLine();
+
+                    MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
+                    messageRequestPacket.setMessage(message);
+                    ByteBuf requestMessage = PacketCodec.INSTANCE.encode(channel.alloc(), messageRequestPacket);
+                    channel.writeAndFlush(requestMessage);
+                }
+            }
+        }).start();
     }
 }
