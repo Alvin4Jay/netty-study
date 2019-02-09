@@ -42,7 +42,8 @@ public class NettyClient {
                     protected void initChannel(NioSocketChannel ch) {
                         // System.out.println("clientKey: " + ch.attr(CLIENT_KEY).get());
 
-                        ch.pipeline().addLast(new FirstClientHandler());
+                        // ch.pipeline().addLast(new FirstClientHandler());
+                        ch.pipeline().addLast(new ClientHandler());
                     }
                 })
                 .option(ChannelOption.SO_KEEPALIVE, true)

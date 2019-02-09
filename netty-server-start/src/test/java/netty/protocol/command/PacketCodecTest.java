@@ -1,10 +1,16 @@
 package netty.protocol.command;
 
 import io.netty.buffer.ByteBuf;
+import io.netty.buffer.ByteBufAllocator;
+import netty.protocol.Packet;
+import netty.protocol.PacketCodec;
+import netty.protocol.request.LoginRequestPacket;
 import netty.serialize.Serializer;
 import netty.serialize.impl.JSONSerializer;
 import org.junit.Assert;
 import org.junit.Test;
+
+import java.util.UUID;
 
 /**
  * PacketCodecTest
@@ -19,12 +25,12 @@ public class PacketCodecTest {
         LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
 
         loginRequestPacket.setVersion(((byte) 1));
-        loginRequestPacket.setUserId(123);
+        loginRequestPacket.setUserId(UUID.randomUUID().toString());
         loginRequestPacket.setUsername("zhangsan");
         loginRequestPacket.setPassword("password");
 
-        PacketCodec packetCodeC = new PacketCodec();
-        ByteBuf byteBuf = packetCodeC.encode(loginRequestPacket);
+        PacketCodec packetCodeC = PacketCodec.INSTANCE;
+        ByteBuf byteBuf = packetCodeC.encode(ByteBufAllocator.DEFAULT, loginRequestPacket);
         Packet decodedPacket = packetCodeC.decode(byteBuf);
 
         Assert.assertArrayEquals(serializer.serialize(loginRequestPacket), serializer.serialize(decodedPacket));

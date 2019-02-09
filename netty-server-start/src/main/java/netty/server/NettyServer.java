@@ -40,7 +40,8 @@ public class NettyServer {
                     protected void initChannel(NioSocketChannel ch) {
                         // System.out.println("clientKey: " + ch.attr(CLIENT_KEY).get());
 
-                        ch.pipeline().addLast(new FirstServerHandler());
+                        // ch.pipeline().addLast(new FirstServerHandler());
+                        ch.pipeline().addLast(new ServerHandler());
                     }
                 })
                 // 给每一条连接指定自定义属性

@@ -1,4 +1,4 @@
-package netty.protocol.command;
+package netty.protocol;
 
 import com.alibaba.fastjson.annotation.JSONField;
 

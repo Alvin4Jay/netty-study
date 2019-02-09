@@ -1,7 +1,9 @@
-package netty.protocol.command;
+package netty.protocol;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
+import netty.protocol.request.LoginRequestPacket;
+import netty.protocol.response.LoginResponsePacket;
 import netty.serialize.Serializer;
 import netty.serialize.impl.JSONSerializer;
 
@@ -9,9 +11,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 import static netty.protocol.command.Command.LOGIN_REQUEST;
+import static netty.protocol.command.Command.LOGIN_RESPONSE;
 
 /**
- * PacketCodec
+ * PacketCodec 单例
  *
  * @author xuanjian.xuwj
  */
@@ -19,22 +22,25 @@ public class PacketCodec {
     // 魔数
     private static final int MAGIC_NUMBER = 0x12345678;
     // 指令--包类型
-    private static final Map<Byte, Class<? extends Packet>> PACKET_TYPE_MAP;
+    private final Map<Byte, Class<? extends Packet>> PACKET_TYPE_MAP;
     // 序列化算法--序列化器
-    private static final Map<Byte, Serializer> SERIALIZER_MAP;
+    private final Map<Byte, Serializer> SERIALIZER_MAP;
 
-    static {
+    public static final PacketCodec INSTANCE = new PacketCodec();
+
+    private PacketCodec() {
         PACKET_TYPE_MAP = new HashMap<>();
         PACKET_TYPE_MAP.put(LOGIN_REQUEST, LoginRequestPacket.class);
+        PACKET_TYPE_MAP.put(LOGIN_RESPONSE, LoginResponsePacket.class);
 
         SERIALIZER_MAP = new HashMap<>();
         Serializer serializer = new JSONSerializer();
         SERIALIZER_MAP.put(serializer.getSerializeAlgorithm(), serializer);
     }
 
-    public ByteBuf encode(Packet packet) {
+    public ByteBuf encode(ByteBufAllocator byteBufAllocator, Packet packet) {
         // 1.获取BuyeBuf
-        ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer();
+        ByteBuf byteBuf = byteBufAllocator.ioBuffer();
 
         // 2.Packet序列化
         byte[] data = Serializer.DEFAULT.serialize(packet);
