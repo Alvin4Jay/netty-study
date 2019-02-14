@@ -26,6 +26,7 @@ public class ServerHandler extends ChannelInboundHandlerAdapter {
         // 解码
         Packet packet = PacketCodec.INSTANCE.decode(request);
 
+        // TODO 此处 if else 可用 策略模式 重构, Map结构
         if (packet instanceof LoginRequestPacket) {
             System.out.println(new Date() + ": 收到客户端登录请求......");
             // 登录校验
