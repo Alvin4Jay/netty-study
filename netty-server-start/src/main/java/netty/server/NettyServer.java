@@ -9,6 +9,14 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import netty.server.handler.inbound.InBoundHandlerA;
+import netty.server.handler.inbound.InBoundHandlerB;
+import netty.server.handler.inbound.InBoundHandlerC;
+import netty.server.handler.outbound.OutBoundHandlerA;
+import netty.server.handler.outbound.OutBoundHandlerB;
+import netty.server.handler.outbound.OutBoundHandlerC;
+
+import java.util.Date;
 
 /**
  * Netty Server Start
@@ -41,7 +49,16 @@ public class NettyServer {
                         // System.out.println("clientKey: " + ch.attr(CLIENT_KEY).get());
 
                         // ch.pipeline().addLast(new FirstServerHandler());
-                        ch.pipeline().addLast(new ServerHandler());
+                        // ch.pipeline().addLast(new ServerHandler());
+                        // 入站事件处理，处理读数据的逻辑链
+                        ch.pipeline().addLast(new InBoundHandlerA());
+                        ch.pipeline().addLast(new InBoundHandlerB());
+                        ch.pipeline().addLast(new InBoundHandlerC());
+
+                        // 出站事件处理，处理写数据的逻辑链
+                        ch.pipeline().addLast(new OutBoundHandlerA());
+                        ch.pipeline().addLast(new OutBoundHandlerB());
+                        ch.pipeline().addLast(new OutBoundHandlerC());
                     }
                 })
                 // 给每一条连接指定自定义属性
@@ -74,9 +91,9 @@ public class NettyServer {
             @Override
             public void operationComplete(Future<? super Void> future) {
                 if (future.isSuccess()) {
-                    System.out.println("端口[" + port + "]绑定成功!");
+                    System.out.println(new Date() + ": 端口[" + port + "]绑定成功!");
                 } else {
-                    System.err.println("端口[" + port + "]绑定失败!");
+                    System.err.println(new Date() + ": 端口[" + port + "]绑定失败!");
                     bind(serverBootstrap, port + 1);
                 }
             }
