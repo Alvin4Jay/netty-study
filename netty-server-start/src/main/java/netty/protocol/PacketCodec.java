@@ -41,8 +41,9 @@ public class PacketCodec {
         SERIALIZER_MAP.put(serializer.getSerializeAlgorithm(), serializer);
     }
 
+    @Deprecated
     public ByteBuf encode(ByteBufAllocator byteBufAllocator, Packet packet) {
-        // 1.获取BuyeBuf
+        // 1.创建ByteBuf
         ByteBuf byteBuf = byteBufAllocator.ioBuffer();
 
         // 2.Packet序列化
@@ -57,6 +58,19 @@ public class PacketCodec {
         byteBuf.writeBytes(data);
 
         return byteBuf;
+    }
+
+    public void encode(ByteBuf byteBuf, Packet packet) {
+        // 1.Packet序列化
+        byte[] data = Serializer.DEFAULT.serialize(packet);
+
+        // 2.编码过程
+        byteBuf.writeInt(MAGIC_NUMBER);
+        byteBuf.writeByte(packet.getVersion());
+        byteBuf.writeByte(Serializer.DEFAULT.getSerializeAlgorithm());
+        byteBuf.writeByte(packet.getCommand());
+        byteBuf.writeInt(data.length);
+        byteBuf.writeBytes(data);
     }
 
     public Packet decode(ByteBuf byteBuf) {

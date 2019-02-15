@@ -9,12 +9,10 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import netty.server.handler.inbound.InBoundHandlerA;
-import netty.server.handler.inbound.InBoundHandlerB;
-import netty.server.handler.inbound.InBoundHandlerC;
-import netty.server.handler.outbound.OutBoundHandlerA;
-import netty.server.handler.outbound.OutBoundHandlerB;
-import netty.server.handler.outbound.OutBoundHandlerC;
+import netty.codec.PacketDecoder;
+import netty.codec.PacketEncoder;
+import netty.server.handler.LoginRequestHandler;
+import netty.server.handler.MessageRequestHandler;
 
 import java.util.Date;
 
@@ -51,14 +49,20 @@ public class NettyServer {
                         // ch.pipeline().addLast(new FirstServerHandler());
                         // ch.pipeline().addLast(new ServerHandler());
                         // 入站事件处理，处理读数据的逻辑链
-                        ch.pipeline().addLast(new InBoundHandlerA());
-                        ch.pipeline().addLast(new InBoundHandlerB());
-                        ch.pipeline().addLast(new InBoundHandlerC());
+                        // ch.pipeline().addLast(new InBoundHandlerA());
+                        // ch.pipeline().addLast(new InBoundHandlerB());
+                        // ch.pipeline().addLast(new InBoundHandlerC());
 
                         // 出站事件处理，处理写数据的逻辑链
-                        ch.pipeline().addLast(new OutBoundHandlerA());
-                        ch.pipeline().addLast(new OutBoundHandlerB());
-                        ch.pipeline().addLast(new OutBoundHandlerC());
+                        // ch.pipeline().addLast(new OutBoundHandlerA());
+                        // ch.pipeline().addLast(new OutBoundHandlerB());
+                        // ch.pipeline().addLast(new OutBoundHandlerC());
+
+                        // 服务端pipeline
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new MessageRequestHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 })
                 // 给每一条连接指定自定义属性

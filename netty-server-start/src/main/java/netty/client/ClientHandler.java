@@ -18,6 +18,7 @@ import java.util.UUID;
  *
  * @author xuanjian.xuwj
  */
+@Deprecated
 public class ClientHandler extends ChannelInboundHandlerAdapter {
     @Override
     public void channelActive(ChannelHandlerContext ctx) {

@@ -12,6 +12,7 @@ import java.util.Date;
  *
  * @author xuanjian.xuwj
  */
+@Deprecated
 public class FirstClientHandler extends ChannelInboundHandlerAdapter {
     // 客户端连接上服务端的时候回调
     @Override

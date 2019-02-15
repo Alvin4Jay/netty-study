@@ -17,6 +17,7 @@ import java.util.Date;
  *
  * @author xuanjian.xuwj
  */
+@Deprecated
 public class ServerHandler extends ChannelInboundHandlerAdapter {
     // 读取数据
     @Override

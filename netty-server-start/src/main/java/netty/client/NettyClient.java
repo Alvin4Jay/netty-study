@@ -1,7 +1,6 @@
 package netty.client;
 
 import io.netty.bootstrap.Bootstrap;
-import io.netty.buffer.ByteBuf;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFuture;
 import io.netty.channel.ChannelInitializer;
@@ -11,7 +10,10 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
-import netty.protocol.PacketCodec;
+import netty.client.handler.LoginResponseHandler;
+import netty.client.handler.MessageResponseHandler;
+import netty.codec.PacketDecoder;
+import netty.codec.PacketEncoder;
 import netty.protocol.request.MessageRequestPacket;
 import netty.util.LoginUtil;
 
@@ -50,7 +52,13 @@ public class NettyClient {
                         // System.out.println("clientKey: " + ch.attr(CLIENT_KEY).get());
 
                         // ch.pipeline().addLast(new FirstClientHandler());
-                        ch.pipeline().addLast(new ClientHandler());
+                        // ch.pipeline().addLast(new ClientHandler());
+
+                        // 客户端的pipeline
+                        ch.pipeline().addLast(new PacketDecoder());
+                        ch.pipeline().addLast(new LoginResponseHandler());
+                        ch.pipeline().addLast(new MessageResponseHandler());
+                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 })
                 .option(ChannelOption.SO_KEEPALIVE, true)
@@ -110,10 +118,7 @@ public class NettyClient {
                     Scanner sc = new Scanner(System.in);
                     String message = sc.nextLine();
 
-                    MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
-                    messageRequestPacket.setMessage(message);
-                    ByteBuf requestMessage = PacketCodec.INSTANCE.encode(channel.alloc(), messageRequestPacket);
-                    channel.writeAndFlush(requestMessage);
+                    channel.writeAndFlush(new MessageRequestPacket(message));
                 }
             }
         }).start();
