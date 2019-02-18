@@ -14,6 +14,7 @@ import netty.client.handler.LoginResponseHandler;
 import netty.client.handler.MessageResponseHandler;
 import netty.codec.PacketDecoder;
 import netty.codec.PacketEncoder;
+import netty.codec.Spliter;
 import netty.protocol.request.MessageRequestPacket;
 import netty.util.LoginUtil;
 
@@ -54,7 +55,10 @@ public class NettyClient {
                         // ch.pipeline().addLast(new FirstClientHandler());
                         // ch.pipeline().addLast(new ClientHandler());
 
+                        // 粘包问题
+                        // ch.pipeline().addLast(new FirstClientHandlerForStickyBagDemo());
                         // 客户端的pipeline
+                        ch.pipeline().addLast(new Spliter()); // 拆包器
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
@@ -118,7 +122,9 @@ public class NettyClient {
                     Scanner sc = new Scanner(System.in);
                     String message = sc.nextLine();
 
-                    channel.writeAndFlush(new MessageRequestPacket(message));
+                    for (int i = 0; i < 500; i++) {
+                        channel.writeAndFlush(new MessageRequestPacket(message));
+                    }
                 }
             }
         }).start();

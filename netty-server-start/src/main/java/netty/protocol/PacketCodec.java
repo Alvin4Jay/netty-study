@@ -21,7 +21,7 @@ import static netty.protocol.command.Command.*;
  */
 public class PacketCodec {
     // 魔数
-    private static final int MAGIC_NUMBER = 0x12345678;
+    public static final int MAGIC_NUMBER = 0x12345678;
     // 指令--包类型
     private final Map<Byte, Class<? extends Packet>> PACKET_TYPE_MAP;
     // 序列化算法--序列化器
