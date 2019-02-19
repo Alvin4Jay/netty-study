@@ -122,9 +122,7 @@ public class NettyClient {
                     Scanner sc = new Scanner(System.in);
                     String message = sc.nextLine();
 
-                    for (int i = 0; i < 500; i++) {
-                        channel.writeAndFlush(new MessageRequestPacket(message));
-                    }
+                    channel.writeAndFlush(new MessageRequestPacket(message));
                 }
             }
         }).start();
