@@ -1,4 +1,4 @@
-package netty.server.handler;
+package netty.server.handler.lifecycle;
 
 import io.netty.buffer.ByteBuf;
 import io.netty.channel.ChannelHandlerContext;
