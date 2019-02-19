@@ -12,10 +12,14 @@ import io.netty.util.concurrent.GenericFutureListener;
 import netty.codec.PacketDecoder;
 import netty.codec.PacketEncoder;
 import netty.codec.Spliter;
+import netty.server.handler.ConnectionStatHandler;
+import netty.server.handler.InboundTrafficStatHandler;
+import netty.server.handler.LifeCycleTestHandler;
 import netty.server.handler.LoginRequestHandler;
 import netty.server.handler.MessageRequestHandler;
 
 import java.util.Date;
+import java.util.concurrent.TimeUnit;
 
 /**
  * Netty Server Start
@@ -62,6 +66,9 @@ public class NettyServer {
                         // 粘包问题
                         // ch.pipeline().addLast(new FirstServerHandlerForStickyBagDemo());
                         // 服务端pipeline
+                        // ch.pipeline().addLast(new ConnectionStatHandler()); // 统计客户端连接数
+                        // ch.pipeline().addLast(new InboundTrafficStatHandler()); // 入口流量统计
+                        // ch.pipeline().addLast(new LifeCycleTestHandler()); // ChannelHandler生命周期测试
                         ch.pipeline().addLast(new Spliter()); // 拆包器
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginRequestHandler());
@@ -100,6 +107,10 @@ public class NettyServer {
             public void operationComplete(Future<? super Void> future) {
                 if (future.isSuccess()) {
                     System.out.println(new Date() + ": 端口[" + port + "]绑定成功!");
+                    // 定时打印客户端连接数
+//                    serverBootstrap.config().group().scheduleAtFixedRate(() -> {
+//                        System.out.println(new Date() + ": client connections count --> " + ConnectionStatHandler.CONNECTIONS);
+//                    }, 1, 1, TimeUnit.SECONDS);
                 } else {
                     System.err.println(new Date() + ": 端口[" + port + "]绑定失败!");
                     bind(serverBootstrap, port + 1);

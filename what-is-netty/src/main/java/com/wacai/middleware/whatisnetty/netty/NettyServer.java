@@ -29,7 +29,18 @@ public class NettyServer {
                 .channel(NioServerSocketChannel.class)
                 .childHandler(new ChannelInitializer<NioSocketChannel>() {
                     @Override
+                    public void handlerAdded(ChannelHandlerContext ctx) throws Exception {
+                        System.out.println("handlerAdded()--->ChannelInitializer");
+                        System.out.println("channel registered--->ChannelInitializer: " + ctx.channel().isRegistered());
+                        System.out.println("channel--->ChannelInitializer: " + ctx.channel().toString());
+                        System.out.println("channel pipeline--->ChannelInitializer: " + ctx.channel().pipeline().toString());
+                        super.handlerAdded(ctx);
+                    }
+
+                    @Override
                     protected void initChannel(NioSocketChannel ch) {
+//                        ch.pipeline().addLast(new DemoHandler1());
+//                        ch.pipeline().addLast(new DemoHandler2());
                         ch.pipeline().addLast(new StringDecoder());
                         ch.pipeline().addLast(new SimpleChannelInboundHandler<String>() {
                             @Override
