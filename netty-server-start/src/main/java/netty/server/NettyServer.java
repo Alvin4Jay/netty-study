@@ -12,6 +12,7 @@ import io.netty.util.concurrent.GenericFutureListener;
 import netty.codec.PacketDecoder;
 import netty.codec.PacketEncoder;
 import netty.codec.Spliter;
+import netty.server.handler.AuthHandler;
 import netty.server.handler.LoginRequestHandler;
 import netty.server.handler.MessageRequestHandler;
 
@@ -68,6 +69,7 @@ public class NettyServer {
                         ch.pipeline().addLast(new Spliter()); // 拆包器
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginRequestHandler());
+                        ch.pipeline().addLast(new AuthHandler()); // 身份验证
                         ch.pipeline().addLast(new MessageRequestHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }

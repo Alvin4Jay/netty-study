@@ -89,11 +89,11 @@ public class NettyClient {
             @Override
             public void operationComplete(Future<? super Void> future) throws Exception {
                 if (future.isSuccess()) {
-                    System.out.println("连接成功，启动控制台线程!");
+                    System.out.println(new Date() + ": 连接成功，启动控制台线程!");
                     Channel channel = ((ChannelFuture) future).channel();
                     startConsoleThread(channel);
                 } else if (retry == 0) {
-                    System.err.println("重试次数已用完，放弃连接!");
+                    System.err.println(new Date() + ": 重试次数已用完，放弃连接!");
                 } else {
                     // 第几次重连
                     int order = MAX_RETRY - retry + 1;
@@ -117,13 +117,13 @@ public class NettyClient {
     private static void startConsoleThread(Channel channel) {
         new Thread(() -> {
             while (!Thread.interrupted()) {
-                if (LoginUtil.hasLogin(channel)) {
+//                if (LoginUtil.hasLogin(channel)) {
                     System.out.println("请输入消息以发送至服务端: ");
                     Scanner sc = new Scanner(System.in);
                     String message = sc.nextLine();
 
                     channel.writeAndFlush(new MessageRequestPacket(message));
-                }
+//                }
             }
         }).start();
     }
