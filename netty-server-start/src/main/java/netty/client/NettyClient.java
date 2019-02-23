@@ -11,15 +11,21 @@ import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
 import netty.client.handler.LoginResponseHandler;
+import netty.client.handler.LogoutResponseHandler;
 import netty.client.handler.MessageResponseHandler;
 import netty.codec.PacketDecoder;
 import netty.codec.PacketEncoder;
 import netty.codec.Spliter;
+import netty.protocol.request.LoginRequestPacket;
+import netty.protocol.request.LogoutRequestPacket;
 import netty.protocol.request.MessageRequestPacket;
+import netty.session.Session;
 import netty.util.LoginUtil;
+import netty.util.SessionUtil;
 
 import java.util.Date;
 import java.util.Scanner;
+import java.util.UUID;
 import java.util.concurrent.TimeUnit;
 
 /**
@@ -62,6 +68,7 @@ public class NettyClient {
                         ch.pipeline().addLast(new PacketDecoder());
                         ch.pipeline().addLast(new LoginResponseHandler());
                         ch.pipeline().addLast(new MessageResponseHandler());
+                        ch.pipeline().addLast(new LogoutResponseHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }
                 })
@@ -115,16 +122,40 @@ public class NettyClient {
      * @param channel 客户端Channel
      */
     private static void startConsoleThread(Channel channel) {
+        Scanner sc = new Scanner(System.in);
+
         new Thread(() -> {
             while (!Thread.interrupted()) {
-//                if (LoginUtil.hasLogin(channel)) {
-                    System.out.println("请输入消息以发送至服务端: ");
-                    Scanner sc = new Scanner(System.in);
-                    String message = sc.nextLine();
+                if (!SessionUtil.hasLogin(channel)) {
+                    System.out.println("请输入用户名登录:");
+                    String username = sc.nextLine();
+                    // 1. 构建登录请求数据包
+                    LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
+                    loginRequestPacket.setUsername(username);
+                    loginRequestPacket.setPassword("pwd");
+                    // 2.写数据到服务端 登录
+                    channel.writeAndFlush(loginRequestPacket);
 
-                    channel.writeAndFlush(new MessageRequestPacket(message));
-//                }
+                    waitForLoginResponse();
+                } else {
+                    String toUserId = sc.next();
+                    if ("logout".equals(toUserId)) {
+                        channel.writeAndFlush(new LogoutRequestPacket());
+                        return;
+                    } else {
+                        String message = sc.next();
+                        channel.writeAndFlush(new MessageRequestPacket(toUserId, message));
+                    }
+                }
             }
         }).start();
+    }
+
+    private static void waitForLoginResponse() {
+        try {
+            Thread.sleep(1000);
+        } catch (InterruptedException e) {
+            e.printStackTrace();
+        }
     }
 }

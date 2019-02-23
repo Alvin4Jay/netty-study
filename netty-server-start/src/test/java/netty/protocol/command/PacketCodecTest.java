@@ -25,7 +25,6 @@ public class PacketCodecTest {
         LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
 
         loginRequestPacket.setVersion(((byte) 1));
-        loginRequestPacket.setUserId(UUID.randomUUID().toString());
         loginRequestPacket.setUsername("zhangsan");
         loginRequestPacket.setPassword("password");
 

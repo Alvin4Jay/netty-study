@@ -14,6 +14,7 @@ import netty.codec.PacketEncoder;
 import netty.codec.Spliter;
 import netty.server.handler.AuthHandler;
 import netty.server.handler.LoginRequestHandler;
+import netty.server.handler.LogoutRequestHandler;
 import netty.server.handler.MessageRequestHandler;
 
 import java.util.Date;
@@ -71,6 +72,7 @@ public class NettyServer {
                         ch.pipeline().addLast(new LoginRequestHandler());
                         ch.pipeline().addLast(new AuthHandler()); // 身份验证
                         ch.pipeline().addLast(new MessageRequestHandler());
+                        ch.pipeline().addLast(new LogoutRequestHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }
                 })

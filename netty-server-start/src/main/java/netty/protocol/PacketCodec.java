@@ -3,8 +3,10 @@ package netty.protocol;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import netty.protocol.request.LoginRequestPacket;
+import netty.protocol.request.LogoutRequestPacket;
 import netty.protocol.request.MessageRequestPacket;
 import netty.protocol.response.LoginResponsePacket;
+import netty.protocol.response.LogoutResponsePacket;
 import netty.protocol.response.MessageResponsePacket;
 import netty.serialize.Serializer;
 import netty.serialize.impl.JSONSerializer;
@@ -35,6 +37,8 @@ public class PacketCodec {
         PACKET_TYPE_MAP.put(LOGIN_RESPONSE, LoginResponsePacket.class);
         PACKET_TYPE_MAP.put(MESSAGE_REQUEST, MessageRequestPacket.class);
         PACKET_TYPE_MAP.put(MESSAGE_RESPONSE, MessageResponsePacket.class);
+        PACKET_TYPE_MAP.put(LOGOUT_REQUEST, LogoutRequestPacket.class);
+        PACKET_TYPE_MAP.put(LOGOUT_RESPONSE, LogoutResponsePacket.class);
 
         SERIALIZER_MAP = new HashMap<>();
         Serializer serializer = new JSONSerializer();
