@@ -2,8 +2,12 @@ package netty.client.console;
 
 import io.netty.channel.Channel;
 import netty.protocol.request.CreateGroupRequestPacket;
+import netty.session.Session;
+import netty.util.SessionUtil;
 
+import java.util.ArrayList;
 import java.util.Arrays;
+import java.util.List;
 import java.util.Scanner;
 
 /**
@@ -19,9 +23,14 @@ public class CreateGroupConsoleCommand implements ConsoleCommand {
     public void exec(Scanner scanner, Channel channel) {
         System.out.print("【拉人群聊】输入 userId 列表，userId 之间英文逗号隔开：");
 
-        String userIdList = scanner.next();
+        String userIds = scanner.next();
+        // 由于userIdList不包含发送创建群聊请求的用户userId，所以手动添加
+        List<String> userIdList = new ArrayList<>(Arrays.asList(userIds.split(USER_ID_SPLITER)));
+        Session session = SessionUtil.getSession(channel);
+        userIdList.add(session.getUserId());
+
         CreateGroupRequestPacket createGroupRequestPacket = new CreateGroupRequestPacket();
-        createGroupRequestPacket.setUserIdList(Arrays.asList(userIdList.split(USER_ID_SPLITER)));
+        createGroupRequestPacket.setUserIdList(userIdList);
         channel.writeAndFlush(createGroupRequestPacket);
     }
 }
