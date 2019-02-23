@@ -13,6 +13,7 @@ import netty.codec.PacketDecoder;
 import netty.codec.PacketEncoder;
 import netty.codec.Spliter;
 import netty.server.handler.AuthHandler;
+import netty.server.handler.CreateGroupRequestHandler;
 import netty.server.handler.LoginRequestHandler;
 import netty.server.handler.LogoutRequestHandler;
 import netty.server.handler.MessageRequestHandler;
@@ -73,6 +74,7 @@ public class NettyServer {
                         ch.pipeline().addLast(new AuthHandler()); // 身份验证
                         ch.pipeline().addLast(new MessageRequestHandler());
                         ch.pipeline().addLast(new LogoutRequestHandler());
+                        ch.pipeline().addLast(new CreateGroupRequestHandler());
                         ch.pipeline().addLast(new PacketEncoder());
                     }
                 })
