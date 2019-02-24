@@ -26,8 +26,9 @@ public class CreateGroupConsoleCommand implements ConsoleCommand {
         String userIds = scanner.next();
         // 由于userIdList不包含发送创建群聊请求的用户userId，所以手动添加
         List<String> userIdList = new ArrayList<>(Arrays.asList(userIds.split(USER_ID_SPLITER)));
-        Session session = SessionUtil.getSession(channel);
-        userIdList.add(session.getUserId());
+        // 思考题
+        // Session session = SessionUtil.getSession(channel);
+        // userIdList.add(session.getUserId());
 
         CreateGroupRequestPacket createGroupRequestPacket = new CreateGroupRequestPacket();
         createGroupRequestPacket.setUserIdList(userIdList);

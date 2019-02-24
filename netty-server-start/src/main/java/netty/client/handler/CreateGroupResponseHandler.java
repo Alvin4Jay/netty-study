@@ -19,7 +19,8 @@ public class CreateGroupResponseHandler extends SimpleChannelInboundHandler<Crea
         Session session = SessionUtil.getSession(ctx.channel());
 
         List<String> usernameList = createGroupResponsePacket.getUsernameList();
-        usernameList.remove(session.getUsername()); // 显示时移除自己的名字
+        // 思考题
+        // usernameList.remove(session.getUsername()); // 显示时移除自己的名字
         System.out.print("群创建成功，id 为[" + createGroupResponsePacket.getGroupId() + "], ");
         System.out.println("群里面有：" + usernameList);
     }
