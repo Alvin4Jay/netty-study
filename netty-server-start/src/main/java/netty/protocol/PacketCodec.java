@@ -3,13 +3,19 @@ package netty.protocol;
 import io.netty.buffer.ByteBuf;
 import io.netty.buffer.ByteBufAllocator;
 import netty.protocol.request.CreateGroupRequestPacket;
+import netty.protocol.request.JoinGroupRequestPacket;
+import netty.protocol.request.ListGroupMembersRequestPacket;
 import netty.protocol.request.LoginRequestPacket;
 import netty.protocol.request.LogoutRequestPacket;
 import netty.protocol.request.MessageRequestPacket;
+import netty.protocol.request.QuitGroupRequestPacket;
 import netty.protocol.response.CreateGroupResponsePacket;
+import netty.protocol.response.JoinGroupResponsePacket;
+import netty.protocol.response.ListGroupMembersResponsePacket;
 import netty.protocol.response.LoginResponsePacket;
 import netty.protocol.response.LogoutResponsePacket;
 import netty.protocol.response.MessageResponsePacket;
+import netty.protocol.response.QuitGroupResponsePacket;
 import netty.serialize.Serializer;
 import netty.serialize.impl.JSONSerializer;
 
@@ -43,6 +49,12 @@ public class PacketCodec {
         PACKET_TYPE_MAP.put(LOGOUT_RESPONSE, LogoutResponsePacket.class);
         PACKET_TYPE_MAP.put(CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
         PACKET_TYPE_MAP.put(CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
+        PACKET_TYPE_MAP.put(JOIN_GROUP_REQUEST, JoinGroupRequestPacket.class);
+        PACKET_TYPE_MAP.put(JOIN_GROUP_RESPONSE, JoinGroupResponsePacket.class);
+        PACKET_TYPE_MAP.put(QUIT_GROUP_REQUEST, QuitGroupRequestPacket.class);
+        PACKET_TYPE_MAP.put(QUIT_GROUP_RESPONSE, QuitGroupResponsePacket.class);
+        PACKET_TYPE_MAP.put(LIST_GROUP_MEMBERS_REQUEST, ListGroupMembersRequestPacket.class);
+        PACKET_TYPE_MAP.put(LIST_GROUP_MEMBERS_RESPONSE, ListGroupMembersResponsePacket.class);
 
         SERIALIZER_MAP = new HashMap<>();
         Serializer serializer = new JSONSerializer();

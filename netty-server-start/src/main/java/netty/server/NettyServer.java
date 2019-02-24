@@ -14,9 +14,12 @@ import netty.codec.PacketEncoder;
 import netty.codec.Spliter;
 import netty.server.handler.AuthHandler;
 import netty.server.handler.CreateGroupRequestHandler;
+import netty.server.handler.JoinGroupRequestHandler;
+import netty.server.handler.ListGroupMembersRequestHandler;
 import netty.server.handler.LoginRequestHandler;
 import netty.server.handler.LogoutRequestHandler;
 import netty.server.handler.MessageRequestHandler;
+import netty.server.handler.QuitGroupRequestHandler;
 
 import java.util.Date;
 
@@ -68,13 +71,27 @@ public class NettyServer {
                         // ch.pipeline().addLast(new ConnectionStatHandler()); // 统计客户端连接数
                         // ch.pipeline().addLast(new InboundTrafficStatHandler()); // 入口流量统计
                         // ch.pipeline().addLast(new LifeCycleTestHandler()); // ChannelHandler生命周期测试
-                        ch.pipeline().addLast(new Spliter()); // 拆包器
+                        // 拆包器
+                        ch.pipeline().addLast(new Spliter());
+                        // Packet解码器
                         ch.pipeline().addLast(new PacketDecoder());
+                        // 登录请求处理器
                         ch.pipeline().addLast(new LoginRequestHandler());
-                        ch.pipeline().addLast(new AuthHandler()); // 身份验证
+                        // 身份验证
+                        ch.pipeline().addLast(new AuthHandler());
+                        // 单聊消息请求处理器
                         ch.pipeline().addLast(new MessageRequestHandler());
-                        ch.pipeline().addLast(new LogoutRequestHandler());
+                        // 创建群请求处理器
                         ch.pipeline().addLast(new CreateGroupRequestHandler());
+                        // 加群请求处理器
+                        ch.pipeline().addLast(new JoinGroupRequestHandler());
+                        // 退群请求处理器
+                        ch.pipeline().addLast(new QuitGroupRequestHandler());
+                        // 获取群成员请求处理器
+                        ch.pipeline().addLast(new ListGroupMembersRequestHandler());
+                        // 登出请求处理器
+                        ch.pipeline().addLast(new LogoutRequestHandler());
+                        // Packet编码器
                         ch.pipeline().addLast(new PacketEncoder());
                     }
                 })

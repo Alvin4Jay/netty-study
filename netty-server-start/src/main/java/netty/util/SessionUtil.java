@@ -1,6 +1,7 @@
 package netty.util;
 
 import io.netty.channel.Channel;
+import io.netty.channel.group.ChannelGroup;
 import io.netty.util.Attribute;
 import netty.attribute.Attributes;
 import netty.session.Session;
@@ -17,6 +18,8 @@ import java.util.concurrent.ConcurrentHashMap;
 public class SessionUtil {
     // userId -> channel 的映射
     private static final Map<String, Channel> USERID_CHANNEL_MAP = new ConcurrentHashMap<>();
+    // groupId -> ChannelGroup的映射
+    private static final Map<String, ChannelGroup> GROUP_ID_CHANNEL_GROUP_MAP = new ConcurrentHashMap<>();
 
     public static void bindSession(Channel channel, Session session) {
         USERID_CHANNEL_MAP.put(session.getUserId(), channel);
@@ -43,5 +46,13 @@ public class SessionUtil {
 
     public static Channel getChannel(String userId) {
         return USERID_CHANNEL_MAP.get(userId);
+    }
+
+    public static void bindChannelGroup(String groupId, ChannelGroup channelGroup) {
+        GROUP_ID_CHANNEL_GROUP_MAP.put(groupId, channelGroup);
+    }
+
+    public static ChannelGroup getChannelGroup(String groupId) {
+        return GROUP_ID_CHANNEL_GROUP_MAP.get(groupId);
     }
 }

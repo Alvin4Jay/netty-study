@@ -13,9 +13,12 @@ import io.netty.util.concurrent.GenericFutureListener;
 import netty.client.console.ConsoleCommandManager;
 import netty.client.console.LoginConsoleCommand;
 import netty.client.handler.CreateGroupResponseHandler;
+import netty.client.handler.JoinGroupResponseHandler;
+import netty.client.handler.ListGroupMembersResponseHandler;
 import netty.client.handler.LoginResponseHandler;
 import netty.client.handler.LogoutResponseHandler;
 import netty.client.handler.MessageResponseHandler;
+import netty.client.handler.QuitGroupResponseHandler;
 import netty.codec.PacketDecoder;
 import netty.codec.PacketEncoder;
 import netty.codec.Spliter;
@@ -61,12 +64,25 @@ public class NettyClient {
                         // 粘包问题
                         // ch.pipeline().addLast(new FirstClientHandlerForStickyBagDemo());
                         // 客户端的pipeline
-                        ch.pipeline().addLast(new Spliter()); // 拆包器
+                        // 拆包器
+                        ch.pipeline().addLast(new Spliter());
+                        // Packet解码器
                         ch.pipeline().addLast(new PacketDecoder());
+                        // 登录响应处理器
                         ch.pipeline().addLast(new LoginResponseHandler());
+                        // 收消息处理器
                         ch.pipeline().addLast(new MessageResponseHandler());
-                        ch.pipeline().addLast(new LogoutResponseHandler());
+                        // 创建群响应处理器
                         ch.pipeline().addLast(new CreateGroupResponseHandler());
+                        // 加群响应处理器
+                        ch.pipeline().addLast(new JoinGroupResponseHandler());
+                        // 退群响应处理器
+                        ch.pipeline().addLast(new QuitGroupResponseHandler());
+                        // 获取群成员响应处理器
+                        ch.pipeline().addLast(new ListGroupMembersResponseHandler());
+                        // 登出响应处理器
+                        ch.pipeline().addLast(new LogoutResponseHandler());
+                        // Packet编码器
                         ch.pipeline().addLast(new PacketEncoder());
                     }
                 })
