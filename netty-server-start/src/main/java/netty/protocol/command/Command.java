@@ -35,4 +35,9 @@ public interface Command {
 
     Byte LIST_GROUP_MEMBERS_RESPONSE = 14;
 
+    Byte JOIN_GROUP_TO_OTHER_CLIENT_RESPONSE = 15;
+
+    Byte QUIT_GROUP_TO_OTHER_CLIENT_RESPONSE = 16;
+
+
 }

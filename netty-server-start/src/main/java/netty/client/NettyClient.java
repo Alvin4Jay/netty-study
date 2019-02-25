@@ -14,11 +14,13 @@ import netty.client.console.ConsoleCommandManager;
 import netty.client.console.LoginConsoleCommand;
 import netty.client.handler.CreateGroupResponseHandler;
 import netty.client.handler.JoinGroupResponseHandler;
+import netty.client.handler.JoinGroupToOtherClientResponseHandler;
 import netty.client.handler.ListGroupMembersResponseHandler;
 import netty.client.handler.LoginResponseHandler;
 import netty.client.handler.LogoutResponseHandler;
 import netty.client.handler.MessageResponseHandler;
 import netty.client.handler.QuitGroupResponseHandler;
+import netty.client.handler.QuitGroupToOtherClientResponseHandler;
 import netty.codec.PacketDecoder;
 import netty.codec.PacketEncoder;
 import netty.codec.Spliter;
@@ -78,6 +80,10 @@ public class NettyClient {
                         ch.pipeline().addLast(new JoinGroupResponseHandler());
                         // 退群响应处理器
                         ch.pipeline().addLast(new QuitGroupResponseHandler());
+                        // 加群响应处理器(通知给群内其他客户端)
+                        ch.pipeline().addLast(new JoinGroupToOtherClientResponseHandler());
+                        // 退群响应处理器(通知给群内其他客户端)
+                        ch.pipeline().addLast(new QuitGroupToOtherClientResponseHandler());
                         // 获取群成员响应处理器
                         ch.pipeline().addLast(new ListGroupMembersResponseHandler());
                         // 登出响应处理器

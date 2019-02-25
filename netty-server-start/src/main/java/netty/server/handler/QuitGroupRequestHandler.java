@@ -5,6 +5,8 @@ import io.netty.channel.SimpleChannelInboundHandler;
 import io.netty.channel.group.ChannelGroup;
 import netty.protocol.request.QuitGroupRequestPacket;
 import netty.protocol.response.QuitGroupResponsePacket;
+import netty.protocol.response.QuitGroupToOtherClientResponsePacket;
+import netty.session.Session;
 import netty.util.SessionUtil;
 
 /**
@@ -26,5 +28,19 @@ public class QuitGroupRequestHandler extends SimpleChannelInboundHandler<QuitGro
         quitGroupResponsePacket.setGroupId(groupId);
 
         ctx.channel().writeAndFlush(quitGroupResponsePacket);
+
+        // 3.通知到群内其他客户端
+        QuitGroupToOtherClientResponsePacket quitGroupToOtherClientResponsePacket = new QuitGroupToOtherClientResponsePacket();
+        quitGroupToOtherClientResponsePacket.setGroupId(groupId);
+        Session session = SessionUtil.getSession(ctx.channel());
+        quitGroupToOtherClientResponsePacket.setSession(session);
+        channelGroup.writeAndFlush(quitGroupToOtherClientResponsePacket);
+
+        System.out.println(session.getUserId() + " 退出群聊 " + groupId);
+
+        // 当一个群的人数为 0 的时候，清理掉内存中群相关的信息
+        if (channelGroup.size() == 0) {
+            SessionUtil.unbindChannelGroup(groupId);
+        }
     }
 }

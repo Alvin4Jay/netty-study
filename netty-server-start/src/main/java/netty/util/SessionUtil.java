@@ -55,4 +55,9 @@ public class SessionUtil {
     public static ChannelGroup getChannelGroup(String groupId) {
         return GROUP_ID_CHANNEL_GROUP_MAP.get(groupId);
     }
+
+    public static void unbindChannelGroup(String groupId) {
+        GROUP_ID_CHANNEL_GROUP_MAP.remove(groupId);
+        System.out.println(new Date() + ": 群 " + groupId + " 解散了");
+    }
 }

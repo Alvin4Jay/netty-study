@@ -11,11 +11,13 @@ import netty.protocol.request.MessageRequestPacket;
 import netty.protocol.request.QuitGroupRequestPacket;
 import netty.protocol.response.CreateGroupResponsePacket;
 import netty.protocol.response.JoinGroupResponsePacket;
+import netty.protocol.response.JoinGroupToOtherClientResponsePacket;
 import netty.protocol.response.ListGroupMembersResponsePacket;
 import netty.protocol.response.LoginResponsePacket;
 import netty.protocol.response.LogoutResponsePacket;
 import netty.protocol.response.MessageResponsePacket;
 import netty.protocol.response.QuitGroupResponsePacket;
+import netty.protocol.response.QuitGroupToOtherClientResponsePacket;
 import netty.serialize.Serializer;
 import netty.serialize.impl.JSONSerializer;
 
@@ -55,6 +57,8 @@ public class PacketCodec {
         PACKET_TYPE_MAP.put(QUIT_GROUP_RESPONSE, QuitGroupResponsePacket.class);
         PACKET_TYPE_MAP.put(LIST_GROUP_MEMBERS_REQUEST, ListGroupMembersRequestPacket.class);
         PACKET_TYPE_MAP.put(LIST_GROUP_MEMBERS_RESPONSE, ListGroupMembersResponsePacket.class);
+        PACKET_TYPE_MAP.put(JOIN_GROUP_TO_OTHER_CLIENT_RESPONSE, JoinGroupToOtherClientResponsePacket.class);
+        PACKET_TYPE_MAP.put(QUIT_GROUP_TO_OTHER_CLIENT_RESPONSE, QuitGroupToOtherClientResponsePacket.class);
 
         SERIALIZER_MAP = new HashMap<>();
         Serializer serializer = new JSONSerializer();
