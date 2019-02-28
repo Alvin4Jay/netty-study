@@ -9,6 +9,7 @@ import io.netty.channel.socket.nio.NioSocketChannel;
 import io.netty.util.AttributeKey;
 import io.netty.util.concurrent.Future;
 import io.netty.util.concurrent.GenericFutureListener;
+import netty.codec.PacketCodecHandler;
 import netty.codec.PacketDecoder;
 import netty.codec.PacketEncoder;
 import netty.codec.Spliter;
@@ -74,6 +75,8 @@ public class NettyServer {
                         // ch.pipeline().addLast(new LifeCycleTestHandler()); // ChannelHandler生命周期测试
                         // 拆包器
                         ch.pipeline().addLast(new Spliter());
+                        // Packet编解码器
+                        ch.pipeline().addLast(PacketCodecHandler.INSTANCE);
                         // Packet解码器
                         ch.pipeline().addLast(new PacketDecoder());
                         // 登录请求处理器
@@ -94,8 +97,6 @@ public class NettyServer {
                         ch.pipeline().addLast(GroupMessageRequestHandler.INSTANCE);
                         // 登出请求处理器
                         ch.pipeline().addLast(LogoutRequestHandler.INSTANCE);
-                        // Packet编码器
-                        ch.pipeline().addLast(new PacketEncoder());
                     }
                 })
                 // 给每一条连接指定自定义属性
