@@ -77,8 +77,6 @@ public class NettyServer {
                         ch.pipeline().addLast(new Spliter());
                         // Packet编解码器
                         ch.pipeline().addLast(PacketCodecHandler.INSTANCE);
-                        // Packet解码器
-                        ch.pipeline().addLast(new PacketDecoder());
                         // 登录请求处理器
                         ch.pipeline().addLast(LoginRequestHandler.INSTANCE);
                         // 身份验证
