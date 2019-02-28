@@ -16,6 +16,7 @@ import netty.codec.Spliter;
 import netty.server.handler.AuthHandler;
 import netty.server.handler.CreateGroupRequestHandler;
 import netty.server.handler.GroupMessageRequestHandler;
+import netty.server.handler.IMHandler;
 import netty.server.handler.JoinGroupRequestHandler;
 import netty.server.handler.ListGroupMembersRequestHandler;
 import netty.server.handler.LoginRequestHandler;
@@ -81,20 +82,8 @@ public class NettyServer {
                         ch.pipeline().addLast(LoginRequestHandler.INSTANCE);
                         // 身份验证
                         ch.pipeline().addLast(AuthHandler.INSTANCE);
-                        // 单聊消息请求处理器
-                        ch.pipeline().addLast(MessageRequestHandler.INSTANCE);
-                        // 创建群请求处理器
-                        ch.pipeline().addLast(CreateGroupRequestHandler.INSTANCE);
-                        // 加群请求处理器
-                        ch.pipeline().addLast(JoinGroupRequestHandler.INSTANCE);
-                        // 退群请求处理器
-                        ch.pipeline().addLast(QuitGroupRequestHandler.INSTANCE);
-                        // 获取群成员请求处理器
-                        ch.pipeline().addLast(ListGroupMembersRequestHandler.INSTANCE);
-                        // 群聊消息请求处理器
-                        ch.pipeline().addLast(GroupMessageRequestHandler.INSTANCE);
-                        // 登出请求处理器
-                        ch.pipeline().addLast(LogoutRequestHandler.INSTANCE);
+                        // 平行handler合并为一个IMHandler
+                        ch.pipeline().addLast(IMHandler.INSTANCE);
                     }
                 })
                 // 给每一条连接指定自定义属性
