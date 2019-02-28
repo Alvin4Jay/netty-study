@@ -39,5 +39,8 @@ public interface Command {
 
     Byte QUIT_GROUP_TO_OTHER_CLIENT_RESPONSE = 16;
 
+    Byte GROUP_MESSAGE_REQUEST = 17;
+
+    Byte GROUP_MESSAGE_RESPONSE = 18;
 
 }

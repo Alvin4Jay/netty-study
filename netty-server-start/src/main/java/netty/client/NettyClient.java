@@ -13,6 +13,7 @@ import io.netty.util.concurrent.GenericFutureListener;
 import netty.client.console.ConsoleCommandManager;
 import netty.client.console.LoginConsoleCommand;
 import netty.client.handler.CreateGroupResponseHandler;
+import netty.client.handler.GroupMessageResponseHandler;
 import netty.client.handler.JoinGroupResponseHandler;
 import netty.client.handler.JoinGroupToOtherClientResponseHandler;
 import netty.client.handler.ListGroupMembersResponseHandler;
@@ -86,6 +87,8 @@ public class NettyClient {
                         ch.pipeline().addLast(new QuitGroupToOtherClientResponseHandler());
                         // 获取群成员响应处理器
                         ch.pipeline().addLast(new ListGroupMembersResponseHandler());
+                        // 群聊消息响应处理器
+                        ch.pipeline().addLast(new GroupMessageResponseHandler());
                         // 登出响应处理器
                         ch.pipeline().addLast(new LogoutResponseHandler());
                         // Packet编码器
