@@ -44,6 +44,6 @@ public class ListGroupMembersRequestHandler extends SimpleChannelInboundHandler<
         listGroupMembersResponsePacket.setGroupId(groupId);
         listGroupMembersResponsePacket.setSessionList(sessionList);
 
-        ctx.channel().writeAndFlush(listGroupMembersResponsePacket);
+        ctx.writeAndFlush(listGroupMembersResponsePacket); // 优化点 参考 https://juejin.im/book/5b4bc28bf265da0f60130116/section/5b4db131e51d4519634fb867
     }
 }

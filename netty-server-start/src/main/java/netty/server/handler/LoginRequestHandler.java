@@ -16,7 +16,7 @@ import java.util.UUID;
  *
  * @author xuanjian.xuwj
  */
-@ChannelHandler.Sharable
+@ChannelHandler.Sharable /* 共享handler */
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
 
     public static final LoginRequestHandler INSTANCE = new LoginRequestHandler();
@@ -47,7 +47,8 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
         }
 
         // 登录响应
-        ctx.channel().writeAndFlush(loginResponsePacket);
+//        ctx.channel().writeAndFlush(loginResponsePacket);
+        ctx.writeAndFlush(loginResponsePacket); // 优化点 参考 https://juejin.im/book/5b4bc28bf265da0f60130116/section/5b4db131e51d4519634fb867
     }
 
     private boolean valid(LoginRequestPacket loginRequestPacket) {

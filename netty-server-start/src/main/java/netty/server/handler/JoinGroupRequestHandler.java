@@ -38,7 +38,7 @@ public class JoinGroupRequestHandler extends SimpleChannelInboundHandler<JoinGro
         joinGroupResponsePacket.setSuccess(true);
         joinGroupResponsePacket.setGroupId(groupId);
 
-        ctx.channel().writeAndFlush(joinGroupResponsePacket);
+        ctx.writeAndFlush(joinGroupResponsePacket); // 优化点 参考 https://juejin.im/book/5b4bc28bf265da0f60130116/section/5b4db131e51d4519634fb867
 
         // 3.通知到群内其他客户端
         JoinGroupToOtherClientResponsePacket joinGroupToOtherClientResponsePacket = new JoinGroupToOtherClientResponsePacket();

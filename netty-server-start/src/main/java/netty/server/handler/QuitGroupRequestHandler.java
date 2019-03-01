@@ -35,7 +35,7 @@ public class QuitGroupRequestHandler extends SimpleChannelInboundHandler<QuitGro
         quitGroupResponsePacket.setSuccess(true);
         quitGroupResponsePacket.setGroupId(groupId);
 
-        ctx.channel().writeAndFlush(quitGroupResponsePacket);
+        ctx.writeAndFlush(quitGroupResponsePacket);
 
         // 3.通知到群内其他客户端
         QuitGroupToOtherClientResponsePacket quitGroupToOtherClientResponsePacket = new QuitGroupToOtherClientResponsePacket();

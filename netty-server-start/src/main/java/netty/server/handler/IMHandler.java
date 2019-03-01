@@ -1,5 +1,6 @@
 package netty.server.handler;
 
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 import netty.protocol.Packet;
@@ -14,6 +15,7 @@ import static netty.protocol.command.Command.*;
  *
  * @author xuanjian.xuwj
  */
+@ChannelHandler.Sharable
 public class IMHandler extends SimpleChannelInboundHandler<Packet> {
 
     public static final IMHandler INSTANCE = new IMHandler();

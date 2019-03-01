@@ -24,12 +24,13 @@ public class GroupMessageRequestHandler extends SimpleChannelInboundHandler<Grou
 
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, GroupMessageRequestPacket requestPacket) {
-
+        // 获取数据
         String groupId = requestPacket.getToGroupId();
         String message = requestPacket.getMessage();
         Session session = SessionUtil.getSession(ctx.channel());
         ChannelGroup channelGroup = SessionUtil.getChannelGroup(groupId);
 
+        // 响应写出
         GroupMessageResponsePacket groupMessageResponsePacket = new GroupMessageResponsePacket();
         groupMessageResponsePacket.setFromGroupId(groupId);
         groupMessageResponsePacket.setMessage(message);
