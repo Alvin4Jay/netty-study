@@ -13,9 +13,11 @@ import netty.codec.PacketCodecHandler;
 import netty.codec.PacketDecoder;
 import netty.codec.PacketEncoder;
 import netty.codec.Spliter;
+import netty.handler.IMIdleStateHandler;
 import netty.server.handler.AuthHandler;
 import netty.server.handler.CreateGroupRequestHandler;
 import netty.server.handler.GroupMessageRequestHandler;
+import netty.server.handler.HeartBeatRequestHandler;
 import netty.server.handler.IMHandler;
 import netty.server.handler.JoinGroupRequestHandler;
 import netty.server.handler.ListGroupMembersRequestHandler;
@@ -74,12 +76,16 @@ public class NettyServer {
                         // ch.pipeline().addLast(new ConnectionStatHandler()); // 统计客户端连接数
                         // ch.pipeline().addLast(new InboundTrafficStatHandler()); // 入口流量统计
                         // ch.pipeline().addLast(new LifeCycleTestHandler()); // ChannelHandler生命周期测试
+                        // 空闲检测
+                        ch.pipeline().addLast(new IMIdleStateHandler());
                         // 拆包器
                         ch.pipeline().addLast(new Spliter());
                         // Packet编解码器
                         ch.pipeline().addLast(PacketCodecHandler.INSTANCE);
                         // 登录请求处理器
                         ch.pipeline().addLast(LoginRequestHandler.INSTANCE);
+                        // 心跳包处理
+                        ch.pipeline().addLast(HeartBeatRequestHandler.INSTANCE);
                         // 身份验证
                         ch.pipeline().addLast(AuthHandler.INSTANCE);
                         // 平行handler合并为一个IMHandler

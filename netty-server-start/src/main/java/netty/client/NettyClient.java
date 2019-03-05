@@ -14,6 +14,7 @@ import netty.client.console.ConsoleCommandManager;
 import netty.client.console.LoginConsoleCommand;
 import netty.client.handler.CreateGroupResponseHandler;
 import netty.client.handler.GroupMessageResponseHandler;
+import netty.client.handler.HeartBeatTimerHandler;
 import netty.client.handler.JoinGroupResponseHandler;
 import netty.client.handler.JoinGroupToOtherClientResponseHandler;
 import netty.client.handler.ListGroupMembersResponseHandler;
@@ -25,6 +26,7 @@ import netty.client.handler.QuitGroupToOtherClientResponseHandler;
 import netty.codec.PacketDecoder;
 import netty.codec.PacketEncoder;
 import netty.codec.Spliter;
+import netty.handler.IMIdleStateHandler;
 import netty.util.SessionUtil;
 
 import java.util.Date;
@@ -67,6 +69,8 @@ public class NettyClient {
                         // 粘包问题
                         // ch.pipeline().addLast(new FirstClientHandlerForStickyBagDemo());
                         // 客户端的pipeline
+                        // 空闲检测
+                        ch.pipeline().addLast(new IMIdleStateHandler());
                         // 拆包器
                         ch.pipeline().addLast(new Spliter());
                         // Packet解码器
@@ -93,6 +97,8 @@ public class NettyClient {
                         ch.pipeline().addLast(new LogoutResponseHandler());
                         // Packet编码器
                         ch.pipeline().addLast(new PacketEncoder());
+                        // 心跳定时器
+                        ch.pipeline().addLast(new HeartBeatTimerHandler());
                     }
                 })
                 .option(ChannelOption.SO_KEEPALIVE, true)
