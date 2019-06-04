@@ -16,7 +16,7 @@ import io.netty.handler.codec.string.StringDecoder;
  */
 public class NettyServer {
     public static void main(String[] args) {
-        // 引导类
+        // 服务端引导类
         ServerBootstrap serverBootstrap = new ServerBootstrap();
 
         // 接收、创建新连接的线程
