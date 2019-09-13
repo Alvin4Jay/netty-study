@@ -1,12 +1,15 @@
 package com.jay.wechat.client;
 
+import com.jay.wechat.client.console.ConsoleCommandManager;
+import com.jay.wechat.client.console.LoginConsoleCommand;
+import com.jay.wechat.client.handler.CreateGroupResponseHandler;
 import com.jay.wechat.client.handler.LoginResponseHandler;
+import com.jay.wechat.client.handler.LogoutResponseHandler;
 import com.jay.wechat.client.handler.MessageResponseHandler;
 import com.jay.wechat.codec.PacketDecoder;
 import com.jay.wechat.codec.PacketEncoder;
 import com.jay.wechat.codec.Spliter;
-import com.jay.wechat.protocol.request.MessageRequestPacket;
-import com.jay.wechat.util.LoginUtil;
+import com.jay.wechat.util.SessionUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
@@ -45,6 +48,8 @@ public class NettyClient {
                         pipeline.addLast(new PacketDecoder());
                         pipeline.addLast(new LoginResponseHandler());
                         pipeline.addLast(new MessageResponseHandler());
+                        pipeline.addLast(new CreateGroupResponseHandler());
+                        pipeline.addLast(new LogoutResponseHandler());
                         pipeline.addLast(new PacketEncoder());
                     }
                 })
@@ -79,20 +84,18 @@ public class NettyClient {
         });
     }
 
-    private static void startConsoleThread(Channel channel) {
+    private static void startConsoleThread(final Channel channel) {
+        final Scanner in = new Scanner(System.in);
+        ConsoleCommandManager consoleCommandManager = new ConsoleCommandManager();
+        LoginConsoleCommand loginConsoleCommand = new LoginConsoleCommand();
+
         new Thread(() -> {
             while (!Thread.interrupted()) {
                 // 判断是否已登录
-                if (LoginUtil.hasLogin(channel)) {
-                    System.out.println("输入消息发送至服务端: ");
-
-                    Scanner in = new Scanner(System.in);
-                    String message = in.nextLine();
-
-                    MessageRequestPacket messageRequestPacket = new MessageRequestPacket();
-                    messageRequestPacket.setMessage(message);
-
-                    channel.writeAndFlush(messageRequestPacket);
+                if (!SessionUtil.hasLogin(channel)) {
+                    loginConsoleCommand.exec(in, channel);
+                } else {
+                    consoleCommandManager.exec(in, channel);
                 }
             }
         }).start();

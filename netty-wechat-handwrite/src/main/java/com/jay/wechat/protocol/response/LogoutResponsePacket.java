@@ -3,19 +3,15 @@ package com.jay.wechat.protocol.response;
 import com.jay.wechat.protocol.Packet;
 import lombok.Data;
 
-import static com.jay.wechat.protocol.command.Command.LOGIN_RESPONSE;
+import static com.jay.wechat.protocol.command.Command.LOGOUT_RESPONSE;
 
 /**
- * LoginResponsePacket
+ * LogoutResponsePacket
  *
  * @author xuanjian
  */
 @Data
-public class LoginResponsePacket extends Packet {
-
-    private String userId;
-
-    private String username;
+public class LogoutResponsePacket extends Packet {
 
     private boolean success;
 
@@ -23,6 +19,6 @@ public class LoginResponsePacket extends Packet {
 
     @Override
     public byte getCommand() {
-        return LOGIN_RESPONSE;
+        return LOGOUT_RESPONSE;
     }
 }

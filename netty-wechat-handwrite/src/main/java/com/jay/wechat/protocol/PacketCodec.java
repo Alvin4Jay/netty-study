@@ -1,8 +1,12 @@
 package com.jay.wechat.protocol;
 
+import com.jay.wechat.protocol.request.CreateGroupRequestPacket;
 import com.jay.wechat.protocol.request.LoginRequestPacket;
+import com.jay.wechat.protocol.request.LogoutRequestPacket;
 import com.jay.wechat.protocol.request.MessageRequestPacket;
+import com.jay.wechat.protocol.response.CreateGroupResponsePacket;
 import com.jay.wechat.protocol.response.LoginResponsePacket;
+import com.jay.wechat.protocol.response.LogoutResponsePacket;
 import com.jay.wechat.protocol.response.MessageResponsePacket;
 import com.jay.wechat.serialize.Serializer;
 import com.jay.wechat.serialize.SerializerAlgorithm;
@@ -12,8 +16,12 @@ import io.netty.buffer.ByteBuf;
 import java.util.HashMap;
 import java.util.Map;
 
+import static com.jay.wechat.protocol.command.Command.CREATE_GROUP_REQUEST;
+import static com.jay.wechat.protocol.command.Command.CREATE_GROUP_RESPONSE;
 import static com.jay.wechat.protocol.command.Command.LOGIN_REQUEST;
 import static com.jay.wechat.protocol.command.Command.LOGIN_RESPONSE;
+import static com.jay.wechat.protocol.command.Command.LOGOUT_REQUEST;
+import static com.jay.wechat.protocol.command.Command.LOGOUT_RESPONSE;
 import static com.jay.wechat.protocol.command.Command.MESSAGE_REQUEST;
 import static com.jay.wechat.protocol.command.Command.MESSAGE_RESPONSE;
 
@@ -34,6 +42,10 @@ public class PacketCodec {
         PACKET_MAP.put(LOGIN_RESPONSE, LoginResponsePacket.class);
         PACKET_MAP.put(MESSAGE_REQUEST, MessageRequestPacket.class);
         PACKET_MAP.put(MESSAGE_RESPONSE, MessageResponsePacket.class);
+        PACKET_MAP.put(LOGOUT_REQUEST, LogoutRequestPacket.class);
+        PACKET_MAP.put(LOGOUT_RESPONSE, LogoutResponsePacket.class);
+        PACKET_MAP.put(CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
+        PACKET_MAP.put(CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
 
         SERIALIZER_MAP.put(SerializerAlgorithm.JSON, JSONSerializer.INSTANCE);
     }

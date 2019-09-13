@@ -13,7 +13,7 @@ import java.util.UUID;
 
 
 /**
- * Class description here.
+ * {@link PacketCodec} Test
  *
  * @author xuanjian
  */
@@ -25,7 +25,6 @@ public class PacketCodecTest {
         LoginRequestPacket loginRequestPacket = new LoginRequestPacket();
 
         loginRequestPacket.setVersion(((byte) 1));
-        loginRequestPacket.setUserId(UUID.randomUUID().toString());
         loginRequestPacket.setUsername("zhangsan");
         loginRequestPacket.setPassword("password");
 
@@ -38,6 +37,7 @@ public class PacketCodecTest {
     }
 
     @org.junit.Test
-    public void decode() {
+    public void uuid() {
+        System.out.println(UUID.randomUUID().toString().split("-")[0]);
     }
 }

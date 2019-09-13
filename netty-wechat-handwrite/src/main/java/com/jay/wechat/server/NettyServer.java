@@ -3,7 +3,10 @@ package com.jay.wechat.server;
 import com.jay.wechat.codec.PacketDecoder;
 import com.jay.wechat.codec.PacketEncoder;
 import com.jay.wechat.codec.Spliter;
+import com.jay.wechat.server.handler.AuthHandler;
+import com.jay.wechat.server.handler.CreateGroupRequestHandler;
 import com.jay.wechat.server.handler.LoginRequestHandler;
+import com.jay.wechat.server.handler.LogoutRequestHandler;
 import com.jay.wechat.server.handler.MessageRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
@@ -37,7 +40,10 @@ public class NettyServer {
                         pipeline.addLast(new Spliter());
                         pipeline.addLast(new PacketDecoder());
                         pipeline.addLast(new LoginRequestHandler());
+                        pipeline.addLast(new AuthHandler());
                         pipeline.addLast(new MessageRequestHandler());
+                        pipeline.addLast(new CreateGroupRequestHandler());
+                        pipeline.addLast(new LogoutRequestHandler());
                         pipeline.addLast(new PacketEncoder());
                     }
                 })
