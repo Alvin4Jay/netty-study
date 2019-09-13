@@ -1,9 +1,22 @@
 package com.jay.wechat.protocol.request;
 
+import com.jay.wechat.protocol.Packet;
+import lombok.Data;
+
+import static com.jay.wechat.protocol.command.Command.MESSAGE_REQUEST;
+
 /**
- * Class description here.
+ * MessageRequestPacket
  *
  * @author xuanjian
  */
-public class MessageRequestPacket {
+@Data
+public class MessageRequestPacket extends Packet {
+
+    private String message;
+
+    @Override
+    public byte getCommand() {
+        return MESSAGE_REQUEST;
+    }
 }

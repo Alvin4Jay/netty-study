@@ -1,4 +1,4 @@
-package com.jay.wechat.protocol.command;
+package com.jay.wechat.protocol;
 
 import com.alibaba.fastjson.annotation.JSONField;
 

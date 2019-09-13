@@ -1,9 +1,14 @@
 package com.jay.wechat.attribute;
 
+import io.netty.util.AttributeKey;
+
 /**
- * Class description here.
+ * Attribute
  *
  * @author xuanjian
  */
 public class Attribute {
+
+    public static final AttributeKey<Boolean> LOGIN = AttributeKey.newInstance("login");
+
 }

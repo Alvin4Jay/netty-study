@@ -25,9 +25,9 @@ public class NIOServer {
             try {
                 // 对应IO编程中服务端启动
                 ServerSocketChannel serverSocketChannel = ServerSocketChannel.open();
-                serverSocketChannel.socket().bind(new InetSocketAddress(8000));
                 serverSocketChannel.configureBlocking(false);
                 serverSocketChannel.register(serverSelector, SelectionKey.OP_ACCEPT);
+                serverSocketChannel.socket().bind(new InetSocketAddress(8000));
 
                 while (true) {
                     // 监测是否有新的连接，这里的1指的是阻塞的时间为1ms

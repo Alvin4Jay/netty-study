@@ -1,15 +1,21 @@
-package com.jay.wechat.protocol.command;
+package com.jay.wechat.protocol;
 
+import com.jay.wechat.protocol.request.LoginRequestPacket;
+import com.jay.wechat.protocol.request.MessageRequestPacket;
+import com.jay.wechat.protocol.response.LoginResponsePacket;
+import com.jay.wechat.protocol.response.MessageResponsePacket;
 import com.jay.wechat.serialize.Serializer;
 import com.jay.wechat.serialize.SerializerAlgorithm;
 import com.jay.wechat.serialize.impl.JSONSerializer;
 import io.netty.buffer.ByteBuf;
-import io.netty.buffer.ByteBufAllocator;
 
 import java.util.HashMap;
 import java.util.Map;
 
 import static com.jay.wechat.protocol.command.Command.LOGIN_REQUEST;
+import static com.jay.wechat.protocol.command.Command.LOGIN_RESPONSE;
+import static com.jay.wechat.protocol.command.Command.MESSAGE_REQUEST;
+import static com.jay.wechat.protocol.command.Command.MESSAGE_RESPONSE;
 
 /**
  * PacketCodec
@@ -19,12 +25,15 @@ import static com.jay.wechat.protocol.command.Command.LOGIN_REQUEST;
 public class PacketCodec {
 
     public static final PacketCodec INSTANCE = new PacketCodec();
-    private static final int MAGIC_NUMBER = 0x12345678;
+    public static final int MAGIC_NUMBER = 0x12345678;
     private static final Map<Byte, Class<? extends Packet>> PACKET_MAP = new HashMap<>(16);
     private static final Map<Byte, Serializer> SERIALIZER_MAP = new HashMap<>(4);
 
     static {
         PACKET_MAP.put(LOGIN_REQUEST, LoginRequestPacket.class);
+        PACKET_MAP.put(LOGIN_RESPONSE, LoginResponsePacket.class);
+        PACKET_MAP.put(MESSAGE_REQUEST, MessageRequestPacket.class);
+        PACKET_MAP.put(MESSAGE_RESPONSE, MessageResponsePacket.class);
 
         SERIALIZER_MAP.put(SerializerAlgorithm.JSON, JSONSerializer.INSTANCE);
     }
@@ -40,13 +49,11 @@ public class PacketCodec {
         return PACKET_MAP.get(command);
     }
 
-    public ByteBuf encode(Packet packet) {
-        // 1. 创建 ByteBuf 对象
-        ByteBuf byteBuf = ByteBufAllocator.DEFAULT.ioBuffer();
-        // 2. 序列化 java 对象
+    public ByteBuf encode(ByteBuf byteBuf, Packet packet) {
+        // 1. 序列化 java 对象
         byte[] data = Serializer.DEFAULT.serialize(packet);
 
-        // 3. 实际编码过程
+        // 2. 实际编码过程
         byteBuf.writeInt(MAGIC_NUMBER);
         byteBuf.writeByte(packet.getVersion());
         byteBuf.writeByte(Serializer.DEFAULT.getSerializerAlgorithm());

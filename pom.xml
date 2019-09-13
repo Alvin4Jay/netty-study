@@ -11,6 +11,8 @@
     <modules>
         <module>netty3</module>
         <module>netty-in-action</module>
+        <module>netty-read-source-code</module>
+        <module>netty-wechat-handwrite</module>
     </modules>
 
     <properties>

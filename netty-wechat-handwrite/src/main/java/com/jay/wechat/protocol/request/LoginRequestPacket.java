@@ -1,4 +1,4 @@
-package com.jay.wechat.protocol.command;
+package com.jay.wechat.protocol.request;
 
 import com.jay.wechat.protocol.Packet;
 import lombok.Data;
@@ -13,7 +13,7 @@ import static com.jay.wechat.protocol.command.Command.LOGIN_REQUEST;
 @Data
 public class LoginRequestPacket extends Packet {
 
-    private Integer userId;
+    private String userId;
 
     private String username;
 
