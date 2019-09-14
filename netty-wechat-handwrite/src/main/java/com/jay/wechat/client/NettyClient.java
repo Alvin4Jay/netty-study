@@ -3,12 +3,18 @@ package com.jay.wechat.client;
 import com.jay.wechat.client.console.ConsoleCommandManager;
 import com.jay.wechat.client.console.LoginConsoleCommand;
 import com.jay.wechat.client.handler.CreateGroupResponseHandler;
+import com.jay.wechat.client.handler.GroupMessageResponseHandler;
+import com.jay.wechat.client.handler.HeartBeatTimerHandler;
+import com.jay.wechat.client.handler.JoinGroupResponseHandler;
+import com.jay.wechat.client.handler.ListGroupMembersResponseHandler;
 import com.jay.wechat.client.handler.LoginResponseHandler;
 import com.jay.wechat.client.handler.LogoutResponseHandler;
 import com.jay.wechat.client.handler.MessageResponseHandler;
+import com.jay.wechat.client.handler.QuitGroupResponseHandler;
 import com.jay.wechat.codec.PacketDecoder;
 import com.jay.wechat.codec.PacketEncoder;
 import com.jay.wechat.codec.Spliter;
+import com.jay.wechat.idle.IMIdleStateHandler;
 import com.jay.wechat.util.SessionUtil;
 import io.netty.bootstrap.Bootstrap;
 import io.netty.channel.Channel;
@@ -44,15 +50,23 @@ public class NettyClient {
                     @Override
                     protected void initChannel(Channel ch) throws Exception {
                         ChannelPipeline pipeline = ch.pipeline();
+                        pipeline.addLast(new IMIdleStateHandler());
                         pipeline.addLast(new Spliter());
                         pipeline.addLast(new PacketDecoder());
                         pipeline.addLast(new LoginResponseHandler());
                         pipeline.addLast(new MessageResponseHandler());
                         pipeline.addLast(new CreateGroupResponseHandler());
+                        pipeline.addLast(new QuitGroupResponseHandler());
+                        pipeline.addLast(new JoinGroupResponseHandler());
+                        pipeline.addLast(new ListGroupMembersResponseHandler());
+                        pipeline.addLast(new GroupMessageResponseHandler());
                         pipeline.addLast(new LogoutResponseHandler());
                         pipeline.addLast(new PacketEncoder());
+                        // 心跳定时器
+                        pipeline.addLast(new HeartBeatTimerHandler());
                     }
                 })
+                .option(ChannelOption.CONNECT_TIMEOUT_MILLIS, 5000)
                 .option(ChannelOption.SO_KEEPALIVE, true)
                 .option(ChannelOption.TCP_NODELAY, true);
 

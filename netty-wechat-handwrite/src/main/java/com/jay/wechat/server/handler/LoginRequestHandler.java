@@ -5,6 +5,7 @@ import com.jay.wechat.protocol.response.LoginResponsePacket;
 import com.jay.wechat.session.Session;
 import com.jay.wechat.util.IDUtil;
 import com.jay.wechat.util.SessionUtil;
+import io.netty.channel.ChannelHandler;
 import io.netty.channel.ChannelHandlerContext;
 import io.netty.channel.SimpleChannelInboundHandler;
 
@@ -13,7 +14,14 @@ import io.netty.channel.SimpleChannelInboundHandler;
  *
  * @author xuanjian
  */
+@ChannelHandler.Sharable
 public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginRequestPacket> {
+
+    public static final LoginRequestHandler INSTANCE = new LoginRequestHandler();
+
+    private LoginRequestHandler() {
+    }
+
     @Override
     protected void channelRead0(ChannelHandlerContext ctx, LoginRequestPacket loginRequestPacket) throws Exception {
         // 登录流程
@@ -35,7 +43,7 @@ public class LoginRequestHandler extends SimpleChannelInboundHandler<LoginReques
             System.out.println("客户端登陆失败");
         }
 
-        ctx.channel().writeAndFlush(loginResponsePacket);
+        ctx.writeAndFlush(loginResponsePacket);
     }
 
     @Override

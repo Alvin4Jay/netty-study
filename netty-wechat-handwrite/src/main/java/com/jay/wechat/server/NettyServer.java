@@ -1,13 +1,12 @@
 package com.jay.wechat.server;
 
-import com.jay.wechat.codec.PacketDecoder;
-import com.jay.wechat.codec.PacketEncoder;
+import com.jay.wechat.codec.PacketCodecHandler;
 import com.jay.wechat.codec.Spliter;
+import com.jay.wechat.idle.IMIdleStateHandler;
 import com.jay.wechat.server.handler.AuthHandler;
-import com.jay.wechat.server.handler.CreateGroupRequestHandler;
+import com.jay.wechat.server.handler.HeartBeatRequestHandler;
+import com.jay.wechat.server.handler.IMHandler;
 import com.jay.wechat.server.handler.LoginRequestHandler;
-import com.jay.wechat.server.handler.LogoutRequestHandler;
-import com.jay.wechat.server.handler.MessageRequestHandler;
 import io.netty.bootstrap.ServerBootstrap;
 import io.netty.channel.Channel;
 import io.netty.channel.ChannelFutureListener;
@@ -37,14 +36,13 @@ public class NettyServer {
                     @Override
                     protected void initChannel(Channel ch) throws Exception {
                         ChannelPipeline pipeline = ch.pipeline();
+                        pipeline.addLast(new IMIdleStateHandler());
                         pipeline.addLast(new Spliter());
-                        pipeline.addLast(new PacketDecoder());
-                        pipeline.addLast(new LoginRequestHandler());
-                        pipeline.addLast(new AuthHandler());
-                        pipeline.addLast(new MessageRequestHandler());
-                        pipeline.addLast(new CreateGroupRequestHandler());
-                        pipeline.addLast(new LogoutRequestHandler());
-                        pipeline.addLast(new PacketEncoder());
+                        pipeline.addLast(PacketCodecHandler.INSTANCE);
+                        pipeline.addLast(HeartBeatRequestHandler.INSTANCE);
+                        pipeline.addLast(LoginRequestHandler.INSTANCE);
+                        pipeline.addLast(AuthHandler.INSTANCE);
+                        pipeline.addLast(IMHandler.INSTANCE);
                     }
                 })
                 .childOption(ChannelOption.SO_KEEPALIVE, true)

@@ -1,13 +1,23 @@
 package com.jay.wechat.protocol;
 
 import com.jay.wechat.protocol.request.CreateGroupRequestPacket;
+import com.jay.wechat.protocol.request.GroupMessageRequestPacket;
+import com.jay.wechat.protocol.request.HeartBeatRequestPacket;
+import com.jay.wechat.protocol.request.JoinGroupRequestPacket;
+import com.jay.wechat.protocol.request.ListGroupMembersRequestPacket;
 import com.jay.wechat.protocol.request.LoginRequestPacket;
 import com.jay.wechat.protocol.request.LogoutRequestPacket;
 import com.jay.wechat.protocol.request.MessageRequestPacket;
+import com.jay.wechat.protocol.request.QuitGroupRequestPacket;
 import com.jay.wechat.protocol.response.CreateGroupResponsePacket;
+import com.jay.wechat.protocol.response.GroupMessageResponsePacket;
+import com.jay.wechat.protocol.response.HeartBeatResponsePacket;
+import com.jay.wechat.protocol.response.JoinGroupResponsePacket;
+import com.jay.wechat.protocol.response.ListGroupMembersResponsePacket;
 import com.jay.wechat.protocol.response.LoginResponsePacket;
 import com.jay.wechat.protocol.response.LogoutResponsePacket;
 import com.jay.wechat.protocol.response.MessageResponsePacket;
+import com.jay.wechat.protocol.response.QuitGroupResponsePacket;
 import com.jay.wechat.serialize.Serializer;
 import com.jay.wechat.serialize.SerializerAlgorithm;
 import com.jay.wechat.serialize.impl.JSONSerializer;
@@ -16,14 +26,7 @@ import io.netty.buffer.ByteBuf;
 import java.util.HashMap;
 import java.util.Map;
 
-import static com.jay.wechat.protocol.command.Command.CREATE_GROUP_REQUEST;
-import static com.jay.wechat.protocol.command.Command.CREATE_GROUP_RESPONSE;
-import static com.jay.wechat.protocol.command.Command.LOGIN_REQUEST;
-import static com.jay.wechat.protocol.command.Command.LOGIN_RESPONSE;
-import static com.jay.wechat.protocol.command.Command.LOGOUT_REQUEST;
-import static com.jay.wechat.protocol.command.Command.LOGOUT_RESPONSE;
-import static com.jay.wechat.protocol.command.Command.MESSAGE_REQUEST;
-import static com.jay.wechat.protocol.command.Command.MESSAGE_RESPONSE;
+import static com.jay.wechat.protocol.command.Command.*;
 
 /**
  * PacketCodec
@@ -46,6 +49,16 @@ public class PacketCodec {
         PACKET_MAP.put(LOGOUT_RESPONSE, LogoutResponsePacket.class);
         PACKET_MAP.put(CREATE_GROUP_REQUEST, CreateGroupRequestPacket.class);
         PACKET_MAP.put(CREATE_GROUP_RESPONSE, CreateGroupResponsePacket.class);
+        PACKET_MAP.put(JOIN_GROUP_REQUEST, JoinGroupRequestPacket.class);
+        PACKET_MAP.put(JOIN_GROUP_RESPONSE, JoinGroupResponsePacket.class);
+        PACKET_MAP.put(QUIT_GROUP_REQUEST, QuitGroupRequestPacket.class);
+        PACKET_MAP.put(QUIT_GROUP_RESPONSE, QuitGroupResponsePacket.class);
+        PACKET_MAP.put(LIST_GROUP_MEMBERS_REQUEST, ListGroupMembersRequestPacket.class);
+        PACKET_MAP.put(LIST_GROUP_MEMBERS_RESPONSE, ListGroupMembersResponsePacket.class);
+        PACKET_MAP.put(GROUP_MESSAGE_REQUEST, GroupMessageRequestPacket.class);
+        PACKET_MAP.put(GROUP_MESSAGE_RESPONSE, GroupMessageResponsePacket.class);
+        PACKET_MAP.put(HEART_BEAT_REQUEST, HeartBeatRequestPacket.class);
+        PACKET_MAP.put(HEART_BEAT_RESPONSE, HeartBeatResponsePacket.class);
 
         SERIALIZER_MAP.put(SerializerAlgorithm.JSON, JSONSerializer.INSTANCE);
     }

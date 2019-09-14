@@ -58,4 +58,8 @@ public class SessionUtil {
         return CHANNEL_GROUP_MAP.get(groupId);
     }
 
+    public static void unbindChannelGroup(String groupId) {
+        CHANNEL_GROUP_MAP.remove(groupId);
+    }
+
 }
