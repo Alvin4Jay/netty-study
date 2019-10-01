@@ -13,6 +13,7 @@
         <module>netty-in-action</module>
         <module>netty-read-source-code</module>
         <module>netty-wechat-handwrite</module>
+        <module>sofa-bolt-case</module>
     </modules>
 
     <properties>
